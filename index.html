@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app = "app">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
+	<link rel="stylesheet" href="style/trello.css">
+</head>
+<body ng-cloak>
+
+	<header>
+		<div class="row">
+			<h1 class="app_name left">Trello</h1>
+		</div>
+	</header>
+	<section  id="lists-container"
+						class = "lists-container"
+						ng-controller = "listsCtrl as listsCtrl">
+		<div class="row">
+			<section class="list list-inline"
+							 ng-repeat = "list in listsCtrl.lists"
+							 ng-controller="listCtrl as listCtrl">
+				<h1>{{list.listName}}</h1>
+				<div class="card" 
+						 ng-repeat="card in listCtrl.getCards(list)"
+						 ng-controller="cardCtrl as cardCtrl">
+
+					<div ng-if='!cardCtrl.isEditing'>
+						{{card.description}}
+						<div ng-click="cardCtrl.editCard(card)"
+								 class="edit-small edit-card hand"></div>
+						<div ng-click="cardCtrl.deleteCard(card)"
+								 class="remove-small remove-card hand"></div>
+					</div>
+					
+					<div ng-if="cardCtrl.isEditing">
+						<form ng-submit="cardCtrl.updateCard(card)">
+							<input type="text" ng-model='cardCtrl.editingCard.description'>
+						</form>
+					</div>
+					</div>
+
+				<section class = "new-card">
+					<form ng-submit="listCtrl.createCard(list)">
+						<input type="text" placeholder="Description" ng-model=listCtrl.cardDescription>
+					</form>
+				</section>
+				<a ng-click="listCtrl.removeList(list)" class = hand>
+					<div class = "remove remove-list"></div>
+				</a>
+			</section>
+			
+			<section class = "list new-list list-inline">
+				<form ng-submit="listsCtrl.addList()">
+					<input type="text" placeholder="List name" ng-model="listsCtrl.listName">
+				</form>
+			</section>
+		</div>
+	</section>
+
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.6.1/lodash.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controllers/listsCtrl.js"></script>
+	<script src="js/controllers/listCtrl.js"></script>
+	<script src="js/controllers/cardCtrl.js"></script>
+	<script src="js/factories/Lists.js"></script>
+	<script src="js/factories/Cards.js"></script>
+</body>
+</html>
